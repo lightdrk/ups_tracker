@@ -14,6 +14,3 @@ Brief description of the project.
   ```bash
   npm install
 
-3. Run Using node:
-   ```bash
-   node tracker.js
