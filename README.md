@@ -12,5 +12,5 @@ Brief description of the project.
 
 2. Install packages:
   ```bash
-  npm install
+     npm install
 
