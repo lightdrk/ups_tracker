@@ -8,5 +8,6 @@ Brief description of the project.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/
-  ```npm install
+   git clone [https://github.com/](https://github.com/lightdrk/ups_tracker.git)
+  ```bash
+  npm install
