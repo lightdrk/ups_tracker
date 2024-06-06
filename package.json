@@ -9,6 +9,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "pdf-lib": "^1.17.1",
     "puppeteer": "^22.10.0"
   }
 }
