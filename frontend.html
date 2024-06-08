@@ -1,0 +1,95 @@
+<div class="ups-generator">
+  <textarea id="tracking-numbers" placeholder="Enter UPS tracking numbers separated by commas"></textarea>
+  <button id="generate-btn">Generate PoD</button>
+  <div id="loading-bar">
+    <div id="loading-progress"></div>
+  </div>
+  <a id="download-btn" href="#" download="ups_pod.pdf">Download PoD</a>
+</div>
+
+<script>
+window.onload = function() {
+  var trackingNumbersInput = document.getElementById("tracking-numbers");
+  var generateBtn = document.getElementById("generate-btn");
+  var loadingBar = document.getElementById("loading-progress");
+  var downloadBtn = document.getElementById("download-btn");
+
+  generateBtn.addEventListener("click", async function() {
+    var trackingNumbers = trackingNumbersInput.value;
+    const trackingList = trackingNumbers.split(',');
+    console.log(trackingList);
+    if (trackingNumbers.trim() !== "") {
+      loadingBar.style.width = "0";
+      try {
+        const response = await fetch('http://localhost:3000/api/generate-pod', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ "numbers": trackingList })
+        });
+        const data = await response.json();
+        downloadBtn.href = data.podUrl;
+        downloadBtn.style.display = "inline-block";
+      } catch (error) {
+        console.error('Error generating PoD:', error);
+      }
+    }
+  });
+
+  downloadBtn.addEventListener("click", async function(){
+    try{
+      const response = await fetch('http://localhost:3000/api/pod-download',{
+
+
+      });
+    }catch (error){
+      console.log('Error Downloading file', error);
+    }
+
+  });
+};
+</script>
+
+<style>
+.ups-generator {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.ups-generator textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+  resize: vertical;
+}
+.ups-generator button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.ups-generator #loading-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.ups-generator #loading-progress {
+  width: 0;
+  height: 100%;
+  background-color: #4CAF50;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+.ups-generator #download-btn {
+  display: none;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+</style>
