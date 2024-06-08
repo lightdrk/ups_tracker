@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
 const  { merge } = require('./merge');
+
 async function track(tracks){
 	const browser = await puppeteer.launch({ headless: 'new', defaultViewport: null, args: ['--start-maximized'],});
 	const page = await browser.newPage();
@@ -83,4 +84,4 @@ async function track(tracks){
 
 }
 
-track(['1Z2285R50347274683','1Z2285R50321821040','1Z2285R50320666050']);
+exports.track = track;
