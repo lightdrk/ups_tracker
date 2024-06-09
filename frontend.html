@@ -4,7 +4,7 @@
   <div id="loading-bar">
     <div id="loading-progress"></div>
   </div>
-  <a id="download-btn" href="#" download="ups_pod.pdf">Download PoD</a>
+  <a id="download-btn" href="http://localhost:3000/api/download-pod/ups_pod.pdf" download="ups_pod.pdf">Download PoD</a>
 </div>
 
 <script>
@@ -34,18 +34,19 @@ window.onload = function() {
       }
     }
   });
+//  function setDownloadLink() {
+//            if (downloadBtn) {
+//                console.log("Setting download link to: ");
+//                downloadBtn.href = 'http://localhost:3000/api/download-pod/ups_pod.pdf';
+//            } else {
+//                console.error("Download button not found");
+//            }
+//  }
+//
+//        // Set the download link when the page loads
+//  window.onload = setDownloadLink;
 
-  downloadBtn.addEventListener("click", async function(){
-    try{
-      const response = await fetch('http://localhost:3000/api/pod-download',{
 
-
-      });
-    }catch (error){
-      console.log('Error Downloading file', error);
-    }
-
-  });
 };
 </script>
 
