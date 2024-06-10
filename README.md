@@ -22,4 +22,4 @@ To start the server, run the following command in your terminal:
 node server.js
 ```
 
-Once the server is running, open your web browser and navigate to [http://localhost:3000](http://localhost:3000) to view the application.
+Once the server is running, open your web browser and navigate to [http://localhost:3000/public/frontend.html](http://localhost:3000) to view the application.
