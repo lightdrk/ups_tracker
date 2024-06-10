@@ -1,5 +1,5 @@
 const express = require('express');
-const {track} = require('./tracker');
+const {track} = require('./utils/tracker');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
@@ -10,6 +10,12 @@ const PORT = 3000;
 app.use(express.static(path.join(__dirname,'pdf_download')));
 app.use(bodyParser.json());
 app.use(cors());
+
+// for index.html request 
+
+app.get('/', (req,res)=>{
+	res.sendFile(path.join(__dirname, 'public', 'frontend.html'));
+});
 
 
 app.post('/api/generate-pod', async (req, res)=>{
