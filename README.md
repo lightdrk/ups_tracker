@@ -1,15 +1,30 @@
-# Project Name
+Installation
 
-## Overview
+    Make sure you have Node.js installed on your machine.
+    Clone this repository:
 
-Brief description of the project.
+    bash
 
-## Installation
+git clone <repository_url>
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/lightdrk/ups_tracker.git
+Navigate to the project directory:
 
-2. Install packages:
-  ```bash
-   npm install
+bash
+
+cd project-directory
+
+Install dependencies:
+
+bash
+
+    npm install
+
+Usage
+
+To start the server, run the following command in your terminal:
+
+bash
+
+node server.js
+
+Once the server is running, open your web browser and navigate to http://localhost:3000 to view the application.
