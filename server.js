@@ -19,16 +19,17 @@ app.get('/', (req,res)=>{
 
 
 app.post('/api/generate-pod', async (req, res)=>{
-	console.log(req);
 	const query = req.body;
-	console.log(query);
-	await track(query.numbers);
+	try{
+		await track(query.numbers);
+	}catch(error){
+		return res.status(500);
+	}
 	res.setHeader('Access-Controll-Allow-Origin', '*');
 	return res.status(200).json({"status": "success"});
 });
 
 app.get('/api/download-pod/ups_pod.pdf', async (req, res)=>{
-	console.log(req);
 	const filePath = path.join(__dirname,'pdf_download','merged.pdf');
 	res.download(filePath,(err)=>{
 		if (err) {
@@ -40,6 +41,8 @@ app.get('/api/download-pod/ups_pod.pdf', async (req, res)=>{
 });
 
 
-app.listen(PORT,'0.0.0.0',()=>{
-	console.log(`http://localhost:${PORT}`);
+app.listen(PORT,'0.0.0.0', async()=>{
+	console.log('url:',`http://localhost:${PORT}`);
+	const open = (await import('open')).default;
+	await open(`http://localhost:${PORT}`);
 });

@@ -10,7 +10,12 @@ async function track(tracks){
   	await page.setUserAgent(customUserAgent);
 	const paths = []
 	for (let track of tracks){
-		await page.goto(`https://www.ups.com/track?track=yes&trackNums=${track}`, { waitUntil: 'load' });
+		try {
+			await page.goto(`https://www.ups.com/track?track=yes&trackNums=${track}`, { waitUntil: 'load' });
+		}catch(err){
+			console.log('error opening site');
+			console.error(err);
+		}
 
 		try{
 			await page.waitForSelector('#stApp_btnProofOfDeliveryonDetails');

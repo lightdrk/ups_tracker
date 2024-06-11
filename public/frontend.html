@@ -26,6 +26,9 @@ window.onload = function() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ "numbers": trackingList })
         });
+        if (response.status == 500){
+          console.log('request again');
+        }
         const data = await response.json();
         downloadBtn.href = data.podUrl;
         downloadBtn.style.display = "inline-block";
