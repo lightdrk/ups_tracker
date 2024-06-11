@@ -1,5 +1,5 @@
 const express = require('express');
-const {track} = require('./tracker');
+const {track} = require('./utils/tracker');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
@@ -11,18 +11,25 @@ app.use(express.static(path.join(__dirname,'pdf_download')));
 app.use(bodyParser.json());
 app.use(cors());
 
+// for index.html request 
+
+app.get('/', (req,res)=>{
+	res.sendFile(path.join(__dirname, 'public', 'frontend.html'));
+});
+
 
 app.post('/api/generate-pod', async (req, res)=>{
-	console.log(req);
 	const query = req.body;
-	console.log(query);
-	await track(query.numbers);
+	try{
+		await track(query.numbers);
+	}catch(error){
+		return res.status(500);
+	}
 	res.setHeader('Access-Controll-Allow-Origin', '*');
 	return res.status(200).json({"status": "success"});
 });
 
 app.get('/api/download-pod/ups_pod.pdf', async (req, res)=>{
-	console.log(req);
 	const filePath = path.join(__dirname,'pdf_download','merged.pdf');
 	res.download(filePath,(err)=>{
 		if (err) {
@@ -34,6 +41,8 @@ app.get('/api/download-pod/ups_pod.pdf', async (req, res)=>{
 });
 
 
-app.listen(PORT,'0.0.0.0',()=>{
-	console.log(`${PORT}`);
+app.listen(PORT,'0.0.0.0', async()=>{
+	console.log('url:',`http://localhost:${PORT}`);
+	const open = (await import('open')).default;
+	await open(`http://localhost:${PORT}`);
 });

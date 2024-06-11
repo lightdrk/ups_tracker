@@ -4,7 +4,7 @@
   <div id="loading-bar">
     <div id="loading-progress"></div>
   </div>
-  <a id="download-btn" href="http://localhost:3000/api/download-pod/ups_pod.pdf" download="ups_pod.pdf">Download PoD</a>
+  <a id="download-btn" href="#" download>Download PoD</a>
 </div>
 
 <script>
@@ -26,6 +26,9 @@ window.onload = function() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ "numbers": trackingList })
         });
+        if (response.status == 500){
+          console.log('request again');
+        }
         const data = await response.json();
         downloadBtn.href = data.podUrl;
         downloadBtn.style.display = "inline-block";
@@ -34,18 +37,28 @@ window.onload = function() {
       }
     }
   });
-//  function setDownloadLink() {
-//            if (downloadBtn) {
-//                console.log("Setting download link to: ");
-//                downloadBtn.href = 'http://localhost:3000/api/download-pod/ups_pod.pdf';
-//            } else {
-//                console.error("Download button not found");
-//            }
-//  }
-//
-//        // Set the download link when the page loads
-//  window.onload = setDownloadLink;
+  
+  downloadBtn.addEventListener('click', async function(){
+    const backendUrl = "http://localhost:3000/api/download-pod/ups_pod.pdf"
+    try {
+      const response = await fetch(backendUrl);
+      if (!response.ok){
+        throw new Error('Network reponse not ok');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = "ups_pod.pdf";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }catch (error){
+      console.error(error);
+    }
 
+  });
 
 };
 </script>

@@ -10,7 +10,12 @@ async function track(tracks){
   	await page.setUserAgent(customUserAgent);
 	const paths = []
 	for (let track of tracks){
-		await page.goto(`https://www.ups.com/track?track=yes&trackNums=${track}`, { waitUntil: 'load' });
+		try {
+			await page.goto(`https://www.ups.com/track?track=yes&trackNums=${track}`, { waitUntil: 'load' });
+		}catch(err){
+			console.log('error opening site');
+			console.error(err);
+		}
 
 		try{
 			await page.waitForSelector('#stApp_btnProofOfDeliveryonDetails');
@@ -64,23 +69,14 @@ async function track(tracks){
 		}
 		await page.keyboard.press('Escape');
 		await page.emulateMediaType('print');
-	//	try{
-	//		await page.setRequestInterception(true);
-	//	}catch(err){
-	//		console.log('error on line 27, Request intercept failed ')
-	//	}
-	//	page.on('request', interceptedRequest=> {
-	//		console.log(interceptedRequest.resourceType());
-	//		console.log(interceptedRequest.url());
-	//	});
 		await newPage.screenshot({path: 'screen.png'});
-		await newPage.pdf({path: path.join('pdf_download',`${track}.pdf`), format: 'A4', printBackground: true, preferCSSPageSize: true });
+		await newPage.pdf({path: path.join(__dirname,'../','pdf_download',`${track}.pdf`), format: 'A4', printBackground: true, preferCSSPageSize: true });
 		await newPage.close();
-		paths.push(path.join(__dirname, 'pdf_download', `${track}.pdf`));
+		paths.push(path.join(__dirname,'../', 'pdf_download', `${track}.pdf`));
 	}
 	console.log(paths);
 	await browser.close();
-	await merge(paths, path.join(__dirname,'pdf_download', 'merged.pdf'));
+	await merge(paths, path.join(__dirname,'../','pdf_download', 'merged.pdf'));
 
 }
 
