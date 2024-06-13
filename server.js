@@ -20,12 +20,13 @@ app.get('/', (req,res)=>{
 
 app.post('/api/generate-pod', async (req, res)=>{
 	const query = req.body;
+	res.setHeader('Access-Controll-Allow-Origin', '*');
 	try{
 		await track(query.numbers);
-	}catch(error){
-		return res.status(500);
+	}catch(err){
+		return res.status(500).send('Internal error');
 	}
-	res.setHeader('Access-Controll-Allow-Origin', '*');
+
 	return res.status(200).json({"status": "success"});
 });
 

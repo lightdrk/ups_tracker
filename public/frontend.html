@@ -1,6 +1,10 @@
 <div class="ups-generator">
   <textarea id="tracking-numbers" placeholder="Enter UPS tracking numbers separated by commas"></textarea>
-  <button id="generate-btn">Generate PoD</button>
+  <div class="btn-ctr">
+    <button id="generate-btn">Generate PoD</button>
+    <p class="load"></p>
+    <p id="msg">&#9888; error generate again</p>
+  </div>
   <div id="loading-bar">
     <div id="loading-progress"></div>
   </div>
@@ -13,8 +17,12 @@ window.onload = function() {
   var generateBtn = document.getElementById("generate-btn");
   var loadingBar = document.getElementById("loading-progress");
   var downloadBtn = document.getElementById("download-btn");
+  var msg =document.getElementById("msg");
+  var loadingCircle = document.getElementsByClassName("load")[0];
 
   generateBtn.addEventListener("click", async function() {
+    generateBtn.classList.add("disable");
+    loadingCircle.style.display = "block";
     var trackingNumbers = trackingNumbersInput.value;
     const trackingList = trackingNumbers.split(',');
     console.log(trackingList);
@@ -26,12 +34,23 @@ window.onload = function() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ "numbers": trackingList })
         });
+        let data = null;
+        loadingCircle.style.display = "none";
         if (response.status == 500){
           console.log('request again');
+          msg.style.display = "block";
+          generateBtn.style.backgroundColor = "#ff0a0a";
+           
+          setTimeout(function () {
+            generateBtn.style.backgroundColor = "#4CAF50";
+            msg.style.display = "none";
+          },2000);
+        }else {
+          data = await response.json();
+          downloadBtn.href = data.podUrl;
+          downloadBtn.style.display = "inline-block";
         }
-        const data = await response.json();
-        downloadBtn.href = data.podUrl;
-        downloadBtn.style.display = "inline-block";
+        generateBtn.classList.remove("disable");
       } catch (error) {
         console.error('Error generating PoD:', error);
       }
@@ -82,8 +101,27 @@ window.onload = function() {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.btn-ctr {
+  display: flex;
+  align-items: center;
   margin-bottom: 10px;
 }
+
+#msg {
+  display: none;
+  margin: 0px;
+  margin-left: 5px;
+  color: #ff0a0a;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.hidden{
+  opacity: 0;
+}
+
 .ups-generator #loading-bar {
   width: 100%;
   height: 20px;
@@ -106,4 +144,64 @@ window.onload = function() {
   text-decoration: none;
   border-radius: 5px;
 }
+
+#generate-btn:hover {
+  background-color: #16911B; 
+  cursor: pointer;
+}
+
+#download-btn:hover {
+  background-color: #16911B;
+  cursor: pointer;
+}
+
+.disable {
+  pointer-events: none;
+  margin-right: 10px;
+  background-color: #85DF88 !important;
+}
+
+
+
+ @keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to { 
+        transform: rotate(360deg);
+    }
+}
+ 
+
+ @-webkit-keyframes rotate {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to { 
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.load {
+    display: none;
+	width: 20px;
+	height: 20px;
+    margin: 0px;
+	border:solid 5px #16911B;
+	border-radius: 50%;
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+	 -webkit-transition: all 0.5s ease-in;
+    -webkit-animation-name:             rotate; 
+    -webkit-animation-duration:         1.0s; 
+    -webkit-animation-iteration-count:  infinite;
+    -webkit-animation-timing-function: linear;
+    	
+    	 transition: all 0.5s ease-in;
+    animation-name:             rotate; 
+    animation-duration:         1.0s; 
+    animation-iteration-count:  infinite;
+    animation-timing-function: linear; 
+}
+
 </style>
