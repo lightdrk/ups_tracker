@@ -13,13 +13,18 @@
    ```bash
    npm install
    ```
+##testing 
+to test the server
+```bash
+npm test
+```
 
 ## Usage
 
 To start the server, run the following command in your terminal:
 
-```bash
-node server.js
-```
+   ```bash
+   npm start
+   ```
 
 Once the server is running, open your web browser and navigate to [http://localhost:3000/public/frontend.html](http://localhost:3000) to view the application.
