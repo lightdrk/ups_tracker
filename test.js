@@ -1,18 +1,17 @@
 const express = require('express');
 const {track} = require('./utils/tracker');
-const bodyParser = require('body-parser');
 const browserPool = require('./utils/browserPool');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // creation of pool
 const poolSize = 10;
 const pool = new browserPool(poolSize);
 (async () => {await pool.init();})();
-
 app.use(express.static(path.join(__dirname,'pdf_download')));
 app.use(bodyParser.json());
 app.use(cors());
@@ -55,8 +54,11 @@ app.post('/api/download-pod/ups_pod.pdf', async (req, res)=>{
 
 });
 
+
 const server = app.listen(PORT,'0.0.0.0', async()=>{
 	console.log('url:',`http://localhost:${PORT}`);
+	const open = (await import('open')).default;
+	await open(`http://localhost:${PORT}`);
 });
 
 const shutdown = async () => {
@@ -68,4 +70,6 @@ const shutdown = async () => {
     });
 };
 
+process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
+

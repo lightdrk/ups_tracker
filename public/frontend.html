@@ -8,21 +8,33 @@
   <div id="loading-bar">
     <div id="loading-progress"></div>
   </div>
-  <a id="download-btn" href="#" download>Download PoD</a>
+  <a id="download-btn" download>Download PoD</a>
 </div>
 
 <script>
 window.onload = function() {
+  function Name(){
+      const nowBuiltIn = new Date();
+      const year = nowBuiltIn.getFullYear();
+      const month = String(nowBuiltIn.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+      const day = String(nowBuiltIn.getDate()).padStart(2, '0');
+      const hours = String(nowBuiltIn.getHours()).padStart(2, '0');
+      const minutes = String(nowBuiltIn.getMinutes()).padStart(2, '0');
+      const seconds = String(nowBuiltIn.getSeconds()).padStart(2, '0');
+      return `${year}${month}${day}${hours}${minutes}${seconds}`;
+  }
+
   var trackingNumbersInput = document.getElementById("tracking-numbers");
   var generateBtn = document.getElementById("generate-btn");
   var loadingBar = document.getElementById("loading-progress");
   var downloadBtn = document.getElementById("download-btn");
   var msg =document.getElementById("msg");
   var loadingCircle = document.getElementsByClassName("load")[0];
-
+  var name = null;
   generateBtn.addEventListener("click", async function() {
     generateBtn.classList.add("disable");
     loadingCircle.style.display = "block";
+    name = Name();
     var trackingNumbers = trackingNumbersInput.value;
     const trackingList = trackingNumbers.split(',');
     console.log(trackingList);
@@ -32,7 +44,7 @@ window.onload = function() {
         const response = await fetch('http://localhost:3000/api/generate-pod', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ "numbers": trackingList })
+          body: JSON.stringify({ "numbers": trackingList, "name": name })
         });
         let data = null;
         loadingCircle.style.display = "none";
@@ -60,7 +72,11 @@ window.onload = function() {
   downloadBtn.addEventListener('click', async function(){
     const backendUrl = "http://localhost:3000/api/download-pod/ups_pod.pdf"
     try {
-      const response = await fetch(backendUrl);
+      const response = await fetch(backendUrl,{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ "name": name })
+        });
       if (!response.ok){
         throw new Error('Network reponse not ok');
       }

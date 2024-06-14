@@ -1,15 +1,15 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
-const { merge } = require('./merge');
+const  { merge } = require('./merge');
 
-async function track(tracks, browser, name){
+async function track(tracks){
+	const browser = await puppeteer.launch({ headless: true, defaultViewport: null, args: ['--start-maximized'],});
 	const page = await browser.newPage();
 
 	const customUserAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36';
   	await page.setUserAgent(customUserAgent);
 	const paths = []
 	for (let track of tracks){
-		console.log('At start', await browser.pages());
 		try {
 			await page.goto(`https://www.ups.com/track?track=yes&trackNums=${track}`, { waitUntil: 'load' });
 		}catch(err){
@@ -105,11 +105,12 @@ async function track(tracks, browser, name){
 		await newPage.screenshot({path: 'screen.png'});
 		await newPage.pdf({path: path.join(__dirname,'../','pdf_download',`${track}.pdf`), format: 'A4', printBackground: true, preferCSSPageSize: true });
 		await newPage.close();
+		await page.close();
 		paths.push(path.join(__dirname,'../', 'pdf_download', `${track}.pdf`));
 	}
-	await page.close();
-	console.log(name);
-	await merge(paths, path.join(__dirname,'../','pdf_download', `${name}merged.pdf`));
+	console.log(paths);
+	await browser.close();
+	await merge(paths, path.join(__dirname,'../','pdf_download', 'merged.pdf'));
 
 }
 
