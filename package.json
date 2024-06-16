@@ -15,6 +15,7 @@
     "express": "^4.19.2",
     "open": "^10.1.0",
     "pdf-lib": "^1.17.1",
-    "puppeteer": "^22.11.0"
+    "puppeteer": "^22.11.0",
+    "puppeteer-core": "^15.5.0"
   }
 }

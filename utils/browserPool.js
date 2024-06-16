@@ -9,10 +9,11 @@ class browserPool{
 	async init(){
 		for (let i=0; i<this.size; i++){
 			const browser = await puppeteer.launch({
-				headless: true, 
-				defaultViewport: null, 
+				headless: true,
+				defaultViewport: null,
 				args: ['--no-sandbox', '--disable-setuid-sandbox', '--start-maximized'],
-			});
+				executablePath: '/app/.apt/opt/google/chrome/chrome',
+			  });
 			console.log(browser, "up");
 			this.pool.push({browser, busy: false});
 		}
